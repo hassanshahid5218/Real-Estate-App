@@ -2,6 +2,7 @@ const exp=require("express")
 const app=exp()
 const PORT=5000
 const mongoose=require('mongoose')
+const UserRoute=require('./routes/user routes')
 // const dotenv=require('dotenv');
 // dotenv.config();
 
@@ -16,6 +17,8 @@ mongoose.connect('mongodb://127.0.0.1:27017/real-estate').then(()=>{
 }).catch((error)=>{
     console.log(error)
 })
+
+app.use('/api/user',UserRoute)
 
 app.listen(PORT,()=>{
     console.log(`server started at port ${PORT}`);
