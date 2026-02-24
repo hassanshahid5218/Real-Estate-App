@@ -1,4 +1,3 @@
-
 const errorhandler=(statusCode , message)=>{
    const err=new Error();
    err.statusCode=statusCode;
@@ -6,5 +5,4 @@ const errorhandler=(statusCode , message)=>{
    return err
 
 }
-
 module.exports=errorhandler
