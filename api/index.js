@@ -24,6 +24,16 @@ mongoose.connect('mongodb://127.0.0.1:27017/real-estate').then(()=>{
 app.use('/api/user',UserRoute)
 app.use('/api/auth',authRoute)
 
+app.use((err,req,res,next)=>{
+    const statusCode=err.statusCode||500;
+    const msg=err.message||"Internal server error";
+    return res.status(statusCode).json({
+        success:false,
+        statusCode,
+        msg
+    });
+})
+
 app.listen(PORT,()=>{
     console.log(`server started at port ${PORT}`);
 })
