@@ -2,8 +2,8 @@ const exp=require("express")
 const app=exp()
 const PORT=5000
 const mongoose=require('mongoose')
-const UserRoute=require('./routes/user routes')
-const authRoute=require('./routes/auth routes')
+const UserRoute=require('./routes/userroutes.js')
+const authRoute=require('./routes/authroutes.js')
 // const dotenv=require('dotenv');
 // dotenv.config();
 
@@ -13,7 +13,8 @@ const authRoute=require('./routes/auth routes')
 //     console.log(error)
 // })
   
-app.use(exp.json())
+app.use(exp.json());
+app.use(exp.urlencoded({ extended: true }));
 
 mongoose.connect('mongodb://127.0.0.1:27017/real-estate').then(()=>{
      console.log("database connected successfully")
