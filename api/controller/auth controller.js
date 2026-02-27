@@ -1,22 +1,8 @@
 const User=require('../models/user model.js')
 const bcryptjs=require('bcryptjs')
-const errorhandler=require('../utills/errors')
-
-
-// async function signup(req,res,next) {
-//     const {username,email,password}=req.body;
-//     if (!username || !email || !password) {
-//       return next(errorhandler(400, "All fields are required"));
-//     }
-//     const hasspassword=bcryptjs.hashSync(password,10)
-//     const newUser= new User({username,email,password:hasspassword});
-//     try{
-//     await newUser.save();
-//     res.status(201).json("User create successfully")}
-//     catch(err){
-//         next(err);
-//     }
-// }
+const errorhandler=require('../utills/errors');
+const jwt=require('jsonwebtoken')
+require("dotenv").config();
 
 async function signup(req, res, next) {
   try {
@@ -54,6 +40,26 @@ async function signup(req, res, next) {
   }
 }
 
+
+async function signin(req,res,next){
+   const{email,password}=req.body
+   try{
+       const validuser=await User.findOne({email});
+       if(!validuser) return next(errorhandler(404,"User not found!"))
+       const validpassword=bcryptjs.compareSync(password,validuser.password) 
+       if(!validpassword) return next(errorhandler(404,"Invalid password"))
+       const token= jwt.sign({id:validuser._id},process.env.JWT_SECRET)
+       const {password:pass, ...rest}=validuser._doc
+       res.cookie("access_token",token,{http:true}).
+       status(200).
+       json(rest)
+   }
+   catch(error){
+    next(error)
+   }
+}
+
 module.exports={
-    signup
+    signup,
+    signin
 }
