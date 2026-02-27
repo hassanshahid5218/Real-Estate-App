@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link,useNavigate } from 'react-router-dom'
 
 export default function SignUp() {
   const[formdata,setformdata]=useState({
@@ -7,6 +7,9 @@ export default function SignUp() {
     email:'',
     password:''
   })
+   const [loading,setloading]=useState(false)
+   const [error,seterror]=useState(null)
+   const navigate=useNavigate();
   const handlechange=(e)=>{
     setformdata({
       ...formdata,
@@ -16,6 +19,8 @@ export default function SignUp() {
 
   const handlesubmit= async (e)=>{
     e.preventDefault();
+    try{
+    setloading(true)
     const res=await fetch('/api/auth/signup',{
       method:'POST',
       headers:{
@@ -25,8 +30,21 @@ export default function SignUp() {
     }
     );
     const data=await res.json();
-    console.log(data)
+    console.log(data);
+    if(data.Success===false){
+          setloading(false);
+          seterror(data.message);
+          return;
+        }
+        setloading(false);
+        seterror(null);
+        navigate('/sign-in')
   }
+catch(error){
+     setloading(false);
+     seterror(error.message)
+    }
+}
 
 
   return (
@@ -36,7 +54,7 @@ export default function SignUp() {
         <input type='text' placeholder='Enter Username' id='username' className='border p-3 rounded-lg'  onChange={handlechange}/>
         <input type='email' placeholder='Enter Email' id='email' className='border p-3 rounded-lg' onChange={handlechange}/>
         <input type='password' placeholder='Enter Password' id='password' className='border p-3 rounded-lg' onChange={handlechange}/>
-        <button className='bg-slate-700 text-white p-3 rounded-lg uppercase hover:opacity-75 disabled:opacity-90' >sign up</button>
+        <button className='bg-slate-700 text-white p-3 rounded-lg uppercase hover:opacity-75 disabled:opacity-90' >{loading?'loading...':'Sign Up'}</button>
       </form>
       <div className='flex gap-2 mt-5'>
         <p>Have an account</p>
@@ -44,7 +62,7 @@ export default function SignUp() {
           <span className='text-blue-700'>Sign in</span>
         </Link>
       </div>
-      
+      {error && <p className='text-red-500 mt-5'>{error}</p> }
 
     </div>
   )
