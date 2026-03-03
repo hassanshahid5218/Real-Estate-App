@@ -82,11 +82,47 @@ async function handlegoogle(req,res,next){
    }
 }
 
+async function updateUser(req, res, next) {
+  try {
+    const userId = req.params.id;
+
+    const user = await User.findById(userId);
+    if (!user) return next(errorhandler(404, "User not found"));
+
+    // Update fields only if they exist
+    if (req.body.username) {
+      user.username = req.body.username;
+    }
+
+    if (req.body.email) {
+      user.email = req.body.email;
+    }
+
+    if (req.body.password) {
+      user.password = bcryptjs.hashSync(req.body.password, 10);
+    }
+
+    if (req.body.avatar) {
+      user.avatar = req.body.avatar;
+    }
+
+    const updatedUser = await user.save();
+
+    const { password, ...rest } = updatedUser._doc;
+
+    res.status(200).json(rest);
+
+  } catch (error) {
+    next(error);
+  }
+}
+
 
 
 
 module.exports={
     signup,
     signin,
-    handlegoogle
+    handlegoogle,
+    updateUser
 }

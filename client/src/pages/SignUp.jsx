@@ -43,7 +43,7 @@ export default function SignUp() {
   }
 catch(error){
      dispatch(signinfailure(error.message))
-}
+}}
 
 
   return (
@@ -66,4 +66,4 @@ catch(error){
 
     </div>
   )
-}}
+}
