@@ -5,15 +5,22 @@ const mongoose=require('mongoose')
 const UserRoute=require('./routes/userroutes.js')
 const authRoute=require('./routes/authroutes.js')
 const cookieParser = require("cookie-parser");
-// const dotenv=require('dotenv');
-// dotenv.config();
+const dotenv=require('dotenv');
+dotenv.config();
 
 // mongoose.connect(process.env.MONGO).then(()=>{
 //      console.log("database connected successfully")
 // }).catch((error)=>{
 //     console.log(error)
 // })
-  
+ const cors = require("cors");
+
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    credentials: true,
+  })
+); 
 app.use(exp.json());
 app.use(cookieParser());
 app.use(exp.urlencoded({ extended: true }));

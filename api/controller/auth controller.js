@@ -50,9 +50,11 @@ async function signin(req,res,next){
        if(!validpassword) return next(errorhandler(404,"Invalid password"))
        const token= jwt.sign({id:validuser._id},process.env.JWT_SECRET)
        const {password:pass, ...rest}=validuser._doc
-       res.cookie("access_token",token,{httpOnly:true}).
-       status(200).
-       json(rest)
+       res.cookie("access_token", token, {
+        httpOnly: true,
+        secure: false,        // for localhost
+        sameSite: "lax",
+        }).status(200).json(rest)
    }
    catch(error){
     next(error)
@@ -65,7 +67,11 @@ async function handlegoogle(req,res,next){
        if(user){
         const token=jwt.sign({id:user._id},process.env.JWT_SECRET)
         const {password:pass, ...rest}=user._doc
-       res.cookie("acess_token",token,{httpOnly:true}).status(200).json(rest)
+       res.cookie("access_token", token, {
+         httpOnly: true,
+         secure: false,        // for localhost
+         sameSite: "lax",
+         }).status(200).json(rest)
        }
        else{
             const generatedpassword=Math.random().toString(36).slice(-8)+Math.random().toString(36).slice(-8)

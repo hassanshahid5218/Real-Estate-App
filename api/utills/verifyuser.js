@@ -9,6 +9,7 @@ const errorhandler = require("./errors.js");
         if(err) return next(errorhandler(401,"Forbidden"));
         req.user=user;
         next();
+        console.log("Cookies:", req.cookies);
     })
 }
 
