@@ -30,6 +30,20 @@ catch(error){
 }
 }
 
+async function deleteuser(req,res,next){
+  if(req.user.id!==req.params.id) return next(errorhandler(401,"You can delete only you own account"))
+   try{
+     await User.findByIdAndDelete(req.params.id)
+     res.clearCookie('access_token');
+     res.status(200).json("User is deleted Successfully");
+   }
+catch(error){
+   next(error)
+} 
+}
+
+
+
 module.exports={
-    test,updateuserinfo
+    test,updateuserinfo,deleteuser
 }
