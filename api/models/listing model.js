@@ -1,0 +1,61 @@
+const moongose=require('mongoose')
+const listingSchema=new moongose.Schema(
+    {
+        name:{
+            type:String,
+            required:true
+        },
+        discription:{
+            type:String,
+            required:true
+        },
+        address:{
+            type:String,
+            required:true
+        },
+        regularPrice:{
+            type:Number,
+            required:true
+        },
+        discountPrice:{
+            type:Number,
+            required:true
+        },
+        bathRoom:{
+            type:Number,
+            required:true
+        },
+        bedRoom:{
+            type:Number,
+            required:true
+        },
+        furnished:{
+            type:Boolean,
+            required:true
+        },
+        parking:{
+            type:Boolean,
+            required:true
+        },
+        type:{
+            type:String,
+            required:true
+        },
+        offer:{
+            type:Boolean,
+            required:true
+        },
+        imageUrl:{
+            type:Array,
+            required:true
+        },
+        userRef:{
+            type:String,
+            required:true
+        },
+
+    },{timestamp:true}
+);
+
+const Listing=moongose.model('Listing',listingSchema)
+module.exports=Listing

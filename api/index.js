@@ -4,6 +4,7 @@ const PORT=5000
 const mongoose=require('mongoose')
 const UserRoute=require('./routes/userroutes.js')
 const authRoute=require('./routes/authroutes.js')
+const listingRoute=require('./routes/listingRoute.js')
 const cookieParser = require("cookie-parser");
 const dotenv=require('dotenv');
 dotenv.config();
@@ -33,6 +34,7 @@ mongoose.connect('mongodb://127.0.0.1:27017/real-estate').then(()=>{
 
 app.use('/api/user',UserRoute)
 app.use('/api/auth',authRoute)
+app.use('/api/listing',listingRoute)
 
 app.use((err,req,res,next)=>{
     const statusCode=err.statusCode||500;
