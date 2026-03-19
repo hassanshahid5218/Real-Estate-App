@@ -4,6 +4,7 @@ import { useRef,useState } from 'react';
 import {supabase} from '../supabase'
 import {updateUserStart,updateUserSuccess,updateUserFailure, deleteUserFailure, deleteUserStart, deleteUserSuccessfull, signoutUserFailure, signoutUserStart, signoutUserSuccessfull} from '../redux/user/user slice';
 import { useDispatch } from 'react-redux';
+import { Link } from 'react-router-dom';
 // import axios from "axios";
 export default function Profile() {
   const {currentuser,loading,error}=useSelector(state=>state.user)
@@ -138,6 +139,7 @@ export default function Profile() {
         >
           {loading ? 'Loading...' : 'Update'}
         </button>
+        <Link className='bg-green-700 text-white rounded-lg p-3 hover:opacity-95 uppercase text-center' to={'/create-listing'}>create listing</Link>
       </form>
       <div className='flex justify-between mt-5'>
         <span onClick={handleDeleteUser} className='text-red-700 cursor-pointer'>Delete Account</span>
