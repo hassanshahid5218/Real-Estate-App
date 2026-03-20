@@ -1,3 +1,4 @@
+const Listing = require("../models/listing model.js")
 const User = require("../models/user model.js")
 const errorhandler = require("../utills/errors.js")
 const bcrypt=require('bcryptjs')
@@ -42,8 +43,21 @@ catch(error){
 } 
 }
 
-
+async function getUserListing(req,res,next){
+  if(req.user.id===req.params.id){
+    try{
+       const listing=await Listing.find({userRef:req.params.id})
+       res.status(200).json(listing)
+    }
+    catch(error){
+         next(error)
+    }
+  }
+  else{
+     return next(errorhandler(401,"You can view only your own listing!"))
+  }
+}
 
 module.exports={
-    test,updateuserinfo,deleteuser
+    test,updateuserinfo,deleteuser,getUserListing
 }
