@@ -20,7 +20,7 @@ export default function Profile() {
        setFileUploadError(false);
        setFilePerc(0);
        const fileExt=file.name.split(",").pop();
-       const fileName=`${currentuser._id}-${Date.now()}.${fileExt}`;
+       const fileName=`${currentuser.id}-${Date.now()}.${fileExt}`;
        setFilePerc(30);
        const {error}=await supabase.storage
        .from("avatars")
@@ -52,7 +52,7 @@ export default function Profile() {
     console.log(formData);
     try{
       dispatch(updateUserStart());
-      const res = await fetch(`/api/user/update/${currentuser._id}`, {
+      const res = await fetch(`/api/user/update/${currentuser.id}`, {
       method: "POST",
       headers: {
           "Content-Type": "application/json",
@@ -75,7 +75,7 @@ export default function Profile() {
   const handleDeleteUser= async()=>{
     try{
       dispatch(deleteUserStart())
-      const res=await fetch(`/api/user/delete/${currentuser._id}`,{
+      const res=await fetch(`/api/user/delete/${currentuser.id}`,{
         method:'Delete',}
 
       );

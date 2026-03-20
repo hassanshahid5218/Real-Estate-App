@@ -5,7 +5,7 @@ const listingSchema=new moongose.Schema(
             type:String,
             required:true
         },
-        discription:{
+        description:{
             type:String,
             required:true
         },
@@ -13,19 +13,19 @@ const listingSchema=new moongose.Schema(
             type:String,
             required:true
         },
-        regularPrice:{
+        regularprice:{
             type:Number,
             required:true
         },
-        discountPrice:{
+        discountprice:{
             type:Number,
             required:true
         },
-        bathRoom:{
+        bathrooms:{
             type:Number,
             required:true
         },
-        bedRoom:{
+        bedrooms:{
             type:Number,
             required:true
         },
@@ -45,7 +45,7 @@ const listingSchema=new moongose.Schema(
             type:Boolean,
             required:true
         },
-        imageUrl:{
+        imageUrls:{
             type:Array,
             required:true
         },
