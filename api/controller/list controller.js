@@ -40,6 +40,26 @@ async function deleteListing(req,res,next){
    }
 }
 
+async function updateListing(req,res,next){
+   const Listing=await listing.findById(req.params.id)
+   if(!Listing){
+    return next(errorhandler(404,"Listing not found"));
+   }
+   if(req.user.id!==Listing.userRef){
+    return next(errorhandler(404,"You can update only your own listing"))
+   } 
+   try{
+
+   }
+   catch{
+    const updatedList=await listing.findByIdAndUpdate(req.params.id,
+        req.params.body,
+        {new:true}
+    )
+    res.status(200).json(updatedList)
+   }
+}
+
 module.exports={
-    creatingList,deleteListing
+    creatingList,deleteListing,updateListing
 }
