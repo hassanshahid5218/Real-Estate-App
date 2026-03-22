@@ -1,4 +1,5 @@
-const listing=require('../models/listing model.js')
+const listing=require('../models/listing model.js');
+const errorhandler = require('../utills/errors.js');
 
 async function creatingList(req,res,next){
     try{
@@ -10,7 +11,7 @@ async function creatingList(req,res,next){
 
     const newListing = new listing({
       ...req.body,
-      userRef: req.user.id || req.user._id, // 🔥 FIX
+      userRef: req.user.id || req.user._id, 
     });
 
     const savedListing = await newListing.save();
@@ -22,6 +23,23 @@ async function creatingList(req,res,next){
     }
 }
 
+async function deleteListing(req,res,next){
+   const Listing=await listing.findById(req.params.id)
+   if(!Listing){
+    return next(errorhandler(404,"Listing not found"));
+   }
+   if(req.user.id!==Listing.userRef){
+    return next(errorhandler(404,"You can delete only your own listing"))
+   }
+   try{
+      await listing.findOneAndDelete(req.params.id)
+      res.status(200).json("Deleted Successfully")
+   }
+   catch(error){
+        next(error)
+   }
+}
+
 module.exports={
-    creatingList
+    creatingList,deleteListing
 }

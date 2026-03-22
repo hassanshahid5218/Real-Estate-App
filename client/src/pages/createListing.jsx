@@ -9,6 +9,7 @@ export default function createListing() {
    const [imageUploadError, setImageUploadError] = useState(false);
    const [Error,setError]=useState(false);
    const [Loading,setLoading]=useState(false);
+  
    const [formData, setFormData] = useState({
     imageUrls: [],
     name:"",
@@ -132,6 +133,7 @@ const handleformsubmit=async (e)=>{
     setLoading(false)
   }
 }
+
   return (
    <main className='p-3 max-w-4xl mx-auto'>
     <h1 className='text-3xl font-semibold text-center my-7'>Create Listing</h1>
@@ -232,6 +234,7 @@ const handleformsubmit=async (e)=>{
             ))}
       <button disabled={Loading||uploading} className='p-3 bg-slate-700 text-white rounded-lg uppercase hover:opacity-95 disabled:opacity-80'>{Loading?"Creating...":"Create Listing"}</button>
        {Error && <p className='text-red-700 text-sm'>{Error}</p>}
+       
     </div>   
     </form>
    </main>
