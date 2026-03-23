@@ -195,7 +195,9 @@ const handleformsubmit=async (e)=>{
               <input type='number' id='regularprice' min='20000' max='2000000' required className='p-3 border border-gray-300 rounded-lg' onChange={handlechange} value={formData.regularprice}/>
               <div className='flex flex-col items-center'>
                 <p>Regular Price</p>
-                <span className='text-xs'>(pkr/month)</span>
+                {formData.type === 'rent' && (
+                  <span className='text-xs'>($ / month)</span>
+                )}
               </div>  
             </div>
             {formData.offer && (
@@ -203,7 +205,9 @@ const handleformsubmit=async (e)=>{
               <input type='number' id='discountprice' min='20000' max='1500000' required className='p-3 border border-gray-300 rounded-lg' onChange={handlechange} value={formData.discountprice}/>
               <div className='flex flex-col items-center'>
                 <p>Discount Price</p>
-                <span className='text-xs'>(pkr/month)</span>
+                {formData.type === 'rent' && (
+                    <span className='text-xs'>($ / month)</span>
+                  )}
               </div>
             </div>
             )}
