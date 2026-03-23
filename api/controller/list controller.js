@@ -1,4 +1,5 @@
 const listing=require('../models/listing model.js');
+const User = require('../models/user model.js');
 const errorhandler = require('../utills/errors.js');
 
 async function creatingList(req,res,next){
@@ -72,6 +73,8 @@ async function getListing(req,res,next){
        next(error)
    } 
 }
+
+
 
 
 module.exports={

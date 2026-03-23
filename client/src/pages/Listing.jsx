@@ -13,13 +13,17 @@ import {
   FaParking,
   FaShare,
 } from 'react-icons/fa';
+import { useSelector } from 'react-redux';
+import Contact from '../Components/Contact';
 
 export default function Listing() {
+  const { currentuser } = useSelector((state) => state.user);
   SwiperCore.use([Navigation]);
   const [listing, setListing] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
    const [copied, setCopied] = useState(false);
+   const [contact,setcontact]=useState(false);
   const params = useParams();
   useEffect(() => {
     const fetchListing = async () => {
@@ -43,7 +47,7 @@ export default function Listing() {
     fetchListing();
   }, [params.listingId]);
   console.log(loading);
-
+  console.log(listing)
   return (
     <main>
       {loading && <p className='text-center my-7 text-2xl'>Loading...</p>}
@@ -130,6 +134,13 @@ export default function Listing() {
                 {listing.furnished ? 'Furnished' : 'Unfurnished'}
               </li>
             </ul>
+            {currentuser && listing.userRef!==currentuser._id && !contact &&(
+                <button onClick={()=>{setcontact(true)}} className='bg-slate-700 text-white rounded-lg hover:opacity-95 p-3'>
+                    Contact Landlord
+                </button>
+            )}
+            
+            {contact && <Contact listing={listing} />}
           </div>
         </div>
       )}
