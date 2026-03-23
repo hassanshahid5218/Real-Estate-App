@@ -28,8 +28,8 @@ async function deleteListing(req,res,next){
    if(!Listing){
     return next(errorhandler(404,"Listing not found"));
    }
-   if(req.user.id!==Listing.userRef){
-    return next(errorhandler(404,"You can delete only your own listing"))
+   if(String(req.user.id)!==String(Listing.userRef)){
+    return next(errorhandler(403,"You can delete only your own listing"))
    }
    try{
       await listing.findOneAndDelete(req.params.id)
@@ -45,21 +45,35 @@ async function updateListing(req,res,next){
    if(!Listing){
     return next(errorhandler(404,"Listing not found"));
    }
-   if(req.user.id!==Listing.userRef){
-    return next(errorhandler(404,"You can update only your own listing"))
+   if(String(req.user.id)!==String(Listing.userRef)){
+    return next(errorhandler(403,"You can update only your own listing"))
    } 
    try{
-
-   }
-   catch{
     const updatedList=await listing.findByIdAndUpdate(req.params.id,
-        req.params.body,
+        req.body,
         {new:true}
     )
     res.status(200).json(updatedList)
    }
+   catch(error){
+    next(error)
+   }
 }
 
+async function getListing(req,res,next){
+   try{
+       const Listing= await listing.findById(req.params.id);
+       if(!Listing){
+        return next(errorhandler(401,"Listing not found"))
+       }
+       res.status(200).json(Listing)
+   }  
+   catch(error){
+       next(error)
+   } 
+}
+
+
 module.exports={
-    creatingList,deleteListing,updateListing
+    creatingList,deleteListing,updateListing,getListing
 }
