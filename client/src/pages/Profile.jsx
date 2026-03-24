@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import { useRef,useState } from 'react'; 
 import {supabase} from '../supabase'
@@ -8,21 +8,39 @@ import { Link } from 'react-router-dom';
 // import axios from "axios";
 export default function Profile() {
   const {currentuser,loading,error}=useSelector(state=>state.user)
-  console.log(currentuser);
+  // console.log("CURRENT USER:", currentuser);
+  console.log("USER ID:", currentuser.id);
+  console.log("USER _ID:", currentuser._id);
   const fileref=useRef(null);
   const [filePerc,setFilePerc]=useState(0);
   const [fileUploadError,setFileUploadError]=useState(false);
-  const [formData,setFormdata]=useState({});
+  const [formData,setFormdata]=useState({
+    username:'',
+    email:'',
+    avatar:'',
+    password:''
+  });
   const [updateSuccess, setUpdateSuccess] = useState(false);
   const [listingError,setlistingError]=useState(false);
   const [userListing,setuserListing]=useState([]);
   const dispatch=useDispatch();
+  useEffect(() => {
+    if (currentuser) {
+      setFormdata({
+        username: currentuser.username || '',
+        email: currentuser.email || '',
+        avatar: currentuser.avatar || '',
+        password: ''
+      });
+    }
+  }, [currentuser]);
+
   const handleFileUpload=async(file)=>{
     try{
        setFileUploadError(false);
        setFilePerc(0);
        const fileExt=file.name.split(",").pop();
-       const fileName=`${currentuser.id}-${Date.now()}.${fileExt}`;
+       const fileName=`${currentuser._id}-${Date.now()}.${fileExt}`;
        setFilePerc(30);
        const {error}=await supabase.storage
        .from("avatars")
@@ -48,36 +66,34 @@ export default function Profile() {
   const handlechange=(e)=>{
     setFormdata({ ...formData, [e.target.id]: e.target.value });
   }
-  
+  // console.log
   const handlesubmit=async (e)=>{
-    e.preventDefault();
-    console.log(formData);
-    try{
+   e.preventDefault();
+    try {
       dispatch(updateUserStart());
-      const res = await fetch(`/api/user/update/${currentuser.id}`, {
-      method: "POST",
-      headers: {
-          "Content-Type": "application/json",
-       },
-      credentials: "include",   // VERY IMPORTANT
-      body: JSON.stringify(formData),
+      const res = await fetch(`/api/user/update/${currentuser._id}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
       });
-      const data=await res.json();
-      if(data.success===false){
+      const data = await res.json();
+      if (data.success === false) {
         dispatch(updateUserFailure(data.message));
         return;
       }
+
       dispatch(updateUserSuccess(data));
       setUpdateSuccess(true);
-    }
-    catch(error){
-      dispatch(updateUserFailure(error.message))
+    } catch (error) {
+      dispatch(updateUserFailure(error.message));
     }
   }
   const handleDeleteUser= async()=>{
     try{
       dispatch(deleteUserStart())
-      const res=await fetch(`/api/user/delete/${currentuser.id}`,{
+      const res=await fetch(`/api/user/delete/${currentuser._id}`,{
         method:'Delete',}
 
       );
@@ -112,8 +128,8 @@ export default function Profile() {
  const handleShowListing = async () => {
   try {
     setlistingError(false);
-    const userId = currentuser?.id || currentuser?._id;
-    const res = await fetch(`/api/user/listings/${currentuser._id}`);
+    const userId = currentuser?._id;
+    const res = await fetch(`/api/user/listings/${userId}`, { credentials: 'include' });
     const data = await res.json();
     if (data.success === false) {
       setlistingError(true);
@@ -163,13 +179,14 @@ const hanlelistingDelete=async (listingid)=>{
 
           }
         </p>
-        <input onChange={handlechange} type='text' placeholder='Username' className='border p-3 rounded-lg' id='username' defaultValue={currentuser.username}/>
-        <input onChange={handlechange} type='email' placeholder='Email' className='border p-3 rounded-lg' id='email' defaultValue={currentuser.email}/>
-        <input onChange={handlechange} type='password' placeholder='Password' className='border p-3 rounded-lg' id='password'/>
+        <input onChange={handlechange} type='text' placeholder='Username' className='border p-3 rounded-lg' id='username' value={formData.username} />
+        <input onChange={handlechange} type='email' placeholder='Email' className='border p-3 rounded-lg' id='email' value={formData.email} />
+        <input onChange={handlechange} type='password' placeholder='Password' className='border p-3 rounded-lg' id='password' value={formData.password} />
         <button
+          type='submit'
           disabled={loading}
           className='bg-slate-700 text-white rounded-lg p-3 uppercase hover:opacity-95 disabled:opacity-80'
-        >
+        > 
           {loading ? 'Loading...' : 'Update'}
         </button>
         <Link className='bg-green-700 text-white rounded-lg p-3 hover:opacity-95 uppercase text-center' to={'/create-listing'}>create listing</Link>
